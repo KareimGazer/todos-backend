@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: todos-ingress
+  # annotations:
+  #   ingress.gcp.kubernetes.io/rewrite-target: "/todos"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /todos
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-svc
+            port:
+              number: 80

@@ -1,0 +1,4 @@
+.env
+node_modules
+db_password.yaml
+db_user.yaml

@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - manifests/backend.yaml
+  - manifests/database.yaml
+  - manifests/ingress.yaml
+  - manifests/db_password.yaml
+  - manifests/db_user.yaml
+images:
+  - name: PROJECT/BACKEND_IMAGE
+    newName: 1701002/todos-backend-pg:v1.01
+  - name: PROJECT/DB_IMAGE
+    newName: postgres:17-alpine3.20
