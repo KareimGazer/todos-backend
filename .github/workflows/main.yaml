@@ -31,7 +31,20 @@ jobs:
         run: gcloud info
 
       - run: gcloud --quiet auth configure-docker # enable us to push images to Google Artifact Registry
-      
+
+      - name: Install SOPS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sops
+
+      - name: Decrypt Secrets
+        env:
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+        run: |
+          # Use SOPS to decrypt the file
+          sops -d manifests/db_user.enc.yaml > manifests/db_user.yaml
+          sops -d manifests/db_password.enc.yaml > manifests/db_password.yaml
+
       - name: 'Get GKE credentials'
         uses: 'google-github-actions/get-gke-credentials@v2'
         with:
@@ -60,7 +73,6 @@ jobs:
           # Create namespace if it doesn't exist
           kubectl create namespace $NAMESPACE || true
           
-          # Set context to the specified namespace
           kubectl config set-context --current --namespace=$NAMESPACE
           kustomize edit set namespace $NAMESPACE
           
